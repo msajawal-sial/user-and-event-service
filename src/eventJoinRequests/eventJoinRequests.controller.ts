@@ -16,6 +16,7 @@ import { PaginationParams } from "../utils/types/paginationParams";
 import EventJoinRequestsService from "./eventJoinRequests.service";
 import { CreateEventJoinRequestDto } from "./dto/createEventJoinRequest.dto";
 import UpdateEventJoinRequestDto from "./dto/updateEventJoinRequest.dto";
+import { IsCreatorGuard } from "./isCreator.guard";
 
 @Controller('event-join-requests')
 export default class EventJoinRequestsController {
@@ -29,6 +30,8 @@ export default class EventJoinRequestsController {
     }
 
     @Patch(':id')
+    @UseGuards(IsCreatorGuard)
+    @UseGuards(JwtAuthGuard)
     async updateEventJoinRequest(@Param('id') id: number, @Body() updateEventJoinRequest: UpdateEventJoinRequestDto) {
         return this.eventJoinRequestsService.updateEventJoinRequest(id, updateEventJoinRequest)
     }
