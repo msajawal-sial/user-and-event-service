@@ -8,10 +8,10 @@ import { User } from '../../../modules/users/entities/user.entity';
 import { TokenPayload } from '../interfaces/token-payload.interface';
 
 @Injectable()
-export class AuthenticationService {
+export class AuthService {
     constructor(
       private readonly usersService: UsersService,
-      private jwtService: JwtService
+      private readonly jwtService: JwtService
     ) {}
    
     public async register(registrationData: RegisterDto) {

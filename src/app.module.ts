@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './core/database/database.module';
-import { AuthenticationModule } from './core/auth/auth.module';
+import { AuthModule } from './core/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { EventsModule } from './modules/events/events.module';
 import { EventJoinRequestsModule } from './modules/event-join-requests/event-join-requests.module';
@@ -22,10 +22,12 @@ import { EmailModule } from './core/messaging/email.module';
         RABBITMQ_USER: Joi.string().required(),
         RABBITMQ_PASSWORD: Joi.string().required(),
         RABBITMQ_HOST: Joi.string().required(),
-        RABBITMQ_QUEUE_NAME: Joi.string().required()
+        RABBITMQ_QUEUE_NAME: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION_TIME_SECONDS: Joi.number().required()
       })
     }),
-    AuthenticationModule,
+    AuthModule,
     DatabaseModule,
     EmailModule,
     UsersModule,
