@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../../../modules/users/users.service';
-import { RegisterDto } from '../dto/register.dto';
+import { UsersService } from '../../modules/users/users.service';
+import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
-import { PostgresErrorCode } from '../../database/postgres-error-codes.enum';
+import { PostgresErrorCode } from '../database/postgres-error-codes.enum';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../../../modules/users/entities/user.entity';
-import { TokenPayload } from '../interfaces/token-payload.interface';
+import { User } from '../../modules/users/entities/user.entity';
+import { TokenPayload } from './interfaces/token-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +40,7 @@ export class AuthService {
         } catch (error) {
           throw new UnauthorizedException('Wrong credentials provided');
         }
-      }
+    }
 
     public async logIn(user: User) {
       const payload: TokenPayload = { sub: user.id, name: user.name, email: user.email };
