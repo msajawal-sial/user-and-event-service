@@ -1,7 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, FindOptionsWhere, Between, MoreThanOrEqual, LessThanOrEqual } from "typeorm";
-import User from '../users/user.entity';
 import EventJoinRequest from "./eventJoinRequest.entity";
 import { CreateEventJoinRequestDto } from "./dto/createEventJoinRequest.dto";
 import { ClientProxy } from "@nestjs/microservices";
