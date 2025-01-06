@@ -5,6 +5,7 @@ import { DatabaseModule } from './database/database.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { UsersModule } from './users/users.module';
 import { EventsModule } from './events/events.module';
+import { EventJoinRequestsModule } from './eventJoinRequests/eventJoinRequests.module';
 
 
 @Module({
@@ -17,12 +18,17 @@ import { EventsModule } from './events/events.module';
         POSTGRES_PASSWORD: Joi.string().required(),
         POSTGRES_DB: Joi.string().required(),
         PORT: Joi.number(),
+        RABBITMQ_USER: Joi.string().required(),
+        RABBITMQ_PASSWORD: Joi.string().required(),
+        RABBITMQ_HOST: Joi.string().required(),
+        RABBITMQ_QUEUE_NAME: Joi.string().required()
       })
     }),
     DatabaseModule,
     AuthenticationModule,
     UsersModule,
-    EventsModule
+    EventsModule,
+    EventJoinRequestsModule
     ],
   controllers: [],
   providers: [],

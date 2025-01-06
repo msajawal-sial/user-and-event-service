@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import User from '../users/user.entity';
 import Event from '../events/event.entity'
+import EventJoinRequest from 'src/eventJoinRequests/eventJoinRequest.entity';
  
 @Module({
   imports: [
@@ -19,9 +20,11 @@ import Event from '../events/event.entity'
         entities: [
           // __dirname + '/../**/*.entity.ts',
           User,
-          Event
+          Event,
+          EventJoinRequest
         ],
         synchronize: true,
+        logging: true
       })
     }),
   ],

@@ -14,7 +14,6 @@ import RequestWithUser from "../authentication/requestWithUser.interface";
 import { JwtAuthGuard } from "src/authentication/jwtAuthentication.guard";
 import { PaginationParams } from "../utils/types/paginationParams";
 import SearchEventDto from "./dto/searchEvent.dto";
-import { Strategy } from "passport-local";
 
 @Controller('events')
 export default class EventsController {

@@ -10,7 +10,8 @@ import {
     RelationId,
     CreateDateColumn,
   } from 'typeorm';
-  import User from '../users/user.entity';
+import User from '../users/user.entity';
+import EventJoinRequest from '../eventJoinRequests/eventJoinRequest.entity';
 
 @Entity()
   class Event {
@@ -32,6 +33,9 @@ import {
 
     @ManyToOne(() => User, (creator: User) => creator.events)
     public creator: User
+
+    @OneToMany(() => EventJoinRequest, (eventJoinRequest: EventJoinRequest) => eventJoinRequest.event)
+    public joinRequests: EventJoinRequest[]
 }
 
 export default Event;
