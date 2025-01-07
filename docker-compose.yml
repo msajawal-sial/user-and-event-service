@@ -1,31 +1,85 @@
-version: "3"
+version: "3.8"
 services:
   postgres:
     container_name: postgres
-    image: postgres:latest
+    image: postgres:16
+    networks:
+      - mispay
     ports:
       - "5432:5432"
     volumes:
       - ~/data/postgres:/data/postgres
     env_file:
       - docker.env
+
+    environment:
+      POSTGRES_USER: 'admin'
+      POSTGRES_PASSWORD: 'admin'
+      POSTGRES_DB: 'nestjs'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    
+  rabbitmq:
+    image: rabbitmq:3-management
     networks:
-      - postgres
- 
-  pgadmin:
-    links:
-      - postgres:postgres
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    ports:
-      - "8080:80"
+      - mispay
     volumes:
-      - ~/data/pgadmin:/root/.pgadmin
-    env_file:
-      - docker.env
+      - /var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: 'admin'
+      RABBITMQ_DEFAULT_PASS: 'admin'
+      RABBITMQ_ERLANG_COOKIE: 'SWQOKODSQALRPCLNMEQGABCDEFGHIJK'
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  email-notification-service:
+    image: email-notification-service:latest
     networks:
+      - mispay
+    environment:
+      SENDER_EMAIL: 'msajawalsial@gmail.com'
+      SEND_GRID_API_KEY: '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'
+      RABBITMQ_USER: 'admin'
+      RABBITMQ_PASSWORD: 'admin'
+      RABBITMQ_HOST: rabbitmq:5672
+      RABBITMQ_QUEUE_NAME: 'emails'
+    depends_on:
+      - rabbitmq
+  
+  user-and-event-service:
+    image: user-and-event-service:latest
+    build: .
+    networks:
+      - mispay
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: 'admin'
+      POSTGRES_PASSWORD: 'admin'
+      POSTGRES_DB: 'nestjs'
+      PORT: 3000
+      RABBITMQ_USER: 'admin'
+      RABBITMQ_PASSWORD: 'admin'
+      RABBITMQ_HOST: rabbitmq:5672
+      RABBITMQ_QUEUE_NAME: 'emails'
+      JWT_SECRET: '1234567890'
+      JWT_EXPIRATION_TIME_SECONDS: 3600
+    depends_on:
       - postgres
- 
+      - rabbitmq
+    ports:
+      - "3000:3000"
+
 networks:
-  postgres:
+  mispay:
     driver: bridge
