@@ -6,7 +6,7 @@ import { CreateEventJoinRequestDto } from "./dto/create-event-join-request.dto";
 import { notificationTemplates } from "../../shared/constants/notification-templates";
 import { UpdateEventJoinRequestDto } from "./dto/update-event-join-request.dto";
 import { EmailService } from "../../core/messaging/email.service";
-import { PostgresErrorCode } from "src/core/database/postgres-error-codes.enum";
+import { PostgresErrorCode } from "../../core/database/postgres-error-codes.enum";
 
 @Injectable()
 export class EventJoinRequestsService {
