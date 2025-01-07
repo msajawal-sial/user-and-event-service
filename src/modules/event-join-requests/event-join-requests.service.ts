@@ -25,7 +25,7 @@ export class EventJoinRequestsService {
             await this.eventJoinRequestsRepository.save(newEventJoinRequest);
         } catch (error) {
             if (error?.code === PostgresErrorCode.UniqueViolation) {
-                throw new HttpException('User with that email already exists', HttpStatus.BAD_REQUEST);
+                throw new HttpException('Event join request already exists', HttpStatus.BAD_REQUEST);
               }
               throw new HttpException('Something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
         }
