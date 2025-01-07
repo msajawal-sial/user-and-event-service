@@ -19,7 +19,7 @@ export class UsersService {
     return newUser;
   }
 
-  async getById(id: number): Promise<User> {
+  async getUser(id: number): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id });
     if (user) {
       return user;
@@ -27,7 +27,7 @@ export class UsersService {
     throw new HttpException('User with this id does not exist', HttpStatus.NOT_FOUND);
   }
 
-  async getByEmail(email: string): Promise<User> {
+  async getUserByEmail(email: string): Promise<User> {
     const user = await this.usersRepository.findOneBy({ email });
     if (user) {
       return user;
@@ -35,7 +35,7 @@ export class UsersService {
     throw new HttpException('User with this email does not exist', HttpStatus.NOT_FOUND);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<boolean> {
+  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<boolean> {
     if (updateUserDto.password) {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10)
     }
