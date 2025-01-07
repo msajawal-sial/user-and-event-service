@@ -14,15 +14,13 @@ export class AuthService {
       private readonly jwtService: JwtService
     ) {}
    
-    public async register(registrationData: RegisterDto) {
+    public async register(registrationData: RegisterDto): Promise<User> {
       const hashedPassword = await bcrypt.hash(registrationData.password, 10);
       try {
-        const createdUser = await this.usersService.create({
+        return await this.usersService.create({
           ...registrationData,
           password: hashedPassword
         });
-        createdUser.password = undefined;
-        return createdUser;
       } catch (error) {
         if (error?.code === PostgresErrorCode.UniqueViolation) {
           throw new HttpException('User with that email already exists', HttpStatus.BAD_REQUEST);
@@ -31,18 +29,17 @@ export class AuthService {
       }
     }
     
-    public async getAuthenticatedUser(email: string, plainTextPassword: string) {
+    public async getAuthenticatedUser(email: string, plainTextPassword: string): Promise<User> {
         try {
           const user = await this.usersService.getByEmail(email);
-          this.verifyPassword(plainTextPassword, user.password);
-          user.password = undefined;
+          await this.verifyPassword(plainTextPassword, user.password);          
           return user;
         } catch (error) {
           throw new UnauthorizedException('Wrong credentials provided');
         }
     }
 
-    public async logIn(user: User) {
+    public async logIn(user: User): Promise<{ access_token: string }> {
       const payload: TokenPayload = { sub: user.id, name: user.name, email: user.email };
       const token = this.jwtService.sign(payload);
       return {
@@ -50,7 +47,7 @@ export class AuthService {
       };
     }
     
-    private async verifyPassword(plainTextPassword: string, hashedPassword: string) {
+    private async verifyPassword(plainTextPassword: string, hashedPassword: string): Promise<void> {
         const isPasswordMatching = await bcrypt.compare(
             plainTextPassword,
             hashedPassword
