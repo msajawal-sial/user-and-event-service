@@ -4,7 +4,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RequestWithUser } from './interfaces/request-with-user.interface';
 import { AuthService } from './auth.service';
 import { ApiResponse, ApiTags, ApiBody, ApiOperation } from '@nestjs/swagger';
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from '../../modules/users/entities/user.entity';
 
 @Controller('auth')
 @ApiTags('auth')
