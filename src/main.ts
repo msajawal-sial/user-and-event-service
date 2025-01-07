@@ -10,7 +10,9 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('API for User and Event Service')
-    .setDescription('API for User and Event Service built with NestJS as part of MISPay assesment')
+    .setDescription(
+      'API for User and Event Service built with NestJS as part of MISPay assesment',
+    )
     .setVersion('1.0')
     .build();
 

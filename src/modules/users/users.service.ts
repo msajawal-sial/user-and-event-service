@@ -5,12 +5,12 @@ import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
- 
+
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>
+    private readonly usersRepository: Repository<User>,
   ) {}
 
   async create(userData: CreateUserDto): Promise<User> {
@@ -24,7 +24,10 @@ export class UsersService {
     if (user) {
       return user;
     }
-    throw new HttpException('User with this id does not exist', HttpStatus.NOT_FOUND);
+    throw new HttpException(
+      'User with this id does not exist',
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   async getUserByEmail(email: string): Promise<User> {
@@ -32,12 +35,15 @@ export class UsersService {
     if (user) {
       return user;
     }
-    throw new HttpException('User with this email does not exist', HttpStatus.NOT_FOUND);
+    throw new HttpException(
+      'User with this email does not exist',
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<boolean> {
     if (updateUserDto.password) {
-      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10)
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
 
     const result = await this.usersRepository.update(id, updateUserDto);

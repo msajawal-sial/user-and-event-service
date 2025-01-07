@@ -43,12 +43,12 @@ describe('AuthController', () => {
     const registerDto = {
       email: 'test@example.com',
       password: 'password123',
-      name: 'Test User'
+      name: 'Test User',
     };
 
     it('should create a new user', async () => {
       const result = await controller.register(registerDto);
-      
+
       expect(result).toEqual(mockUser);
       expect(authService.register).toHaveBeenCalledWith(registerDto);
     });
@@ -57,13 +57,13 @@ describe('AuthController', () => {
   describe('logIn', () => {
     it('should return access token', async () => {
       const request = {
-        user: mockUser
+        user: mockUser,
       } as RequestWithUser;
 
       const result = await controller.logIn(request);
-      
+
       expect(result).toEqual({ access_token: 'mock.jwt.token' });
       expect(authService.logIn).toHaveBeenCalledWith(mockUser);
     });
   });
-}); 
+});

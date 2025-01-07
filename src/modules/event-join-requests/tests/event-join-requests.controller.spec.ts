@@ -12,14 +12,14 @@ describe('EventJoinRequestsController', () => {
   const mockUser = {
     id: 1,
     email: 'test@example.com',
-    name: 'Test User'
+    name: 'Test User',
   } as Partial<User> as User;
 
   const mockJoinRequest = {
     id: 1,
     eventId: 1,
     userId: 1,
-    status: 'PENDING'
+    status: 'PENDING',
   } as EventJoinRequest;
 
   const mockService = {
@@ -38,7 +38,9 @@ describe('EventJoinRequestsController', () => {
       ],
     }).compile();
 
-    controller = module.get<EventJoinRequestsController>(EventJoinRequestsController);
+    controller = module.get<EventJoinRequestsController>(
+      EventJoinRequestsController,
+    );
     service = module.get<EventJoinRequestsService>(EventJoinRequestsService);
   });
 
@@ -48,32 +50,35 @@ describe('EventJoinRequestsController', () => {
 
   describe('createEventJoinRequest', () => {
     const createDto = {
-      eventId: 1
+      eventId: 1,
     };
 
     it('should create a join request', async () => {
       const request = { user: mockUser } as RequestWithUser;
 
-      const result = await controller.createEventJoinRequest(createDto, request);
-      
+      const result = await controller.createEventJoinRequest(
+        createDto,
+        request,
+      );
+
       expect(result).toEqual(mockJoinRequest);
       expect(service.createEventJoinRequest).toHaveBeenCalledWith(
         createDto,
-        mockUser.id
+        mockUser.id,
       );
     });
   });
 
   describe('updateEventJoinRequest', () => {
     const updateDto = {
-      status: 'ACCEPTED' as const
+      status: 'ACCEPTED' as const,
     };
 
     it('should update join request status', async () => {
       const result = await controller.updateEventJoinRequest(1, updateDto);
-      
+
       expect(result).toBe(true);
       expect(service.updateEventJoinRequest).toHaveBeenCalledWith(1, updateDto);
     });
   });
-}); 
+});

@@ -17,7 +17,7 @@ describe('AuthService', () => {
       id: 1,
       email: 'test@example.com',
       name: 'Test User',
-      password: await bcrypt.hash('password123', 10)
+      password: await bcrypt.hash('password123', 10),
     } as Partial<User> as User;
   });
 
@@ -58,7 +58,7 @@ describe('AuthService', () => {
     const registerDto = {
       email: 'test@example.com',
       password: 'password123',
-      name: 'Test User'
+      name: 'Test User',
     };
 
     it('should successfully register a new user', async () => {
@@ -73,15 +73,20 @@ describe('AuthService', () => {
     it('should throw an error if user already exists', async () => {
       mockUsersService.create.mockRejectedValue({ code: '23505' }); // PostgresErrorCode.UniqueViolation
 
-      await expect(service.register(registerDto)).rejects.toThrow(HttpException);
+      await expect(service.register(registerDto)).rejects.toThrow(
+        HttpException,
+      );
     });
   });
 
   describe('getAuthenticatedUser', () => {
     it('should return user if credentials are valid', async () => {
       mockUsersService.getUserByEmail.mockResolvedValue(mockUser);
-      
-      const result = await service.getAuthenticatedUser('test@example.com', 'password123');
+
+      const result = await service.getAuthenticatedUser(
+        'test@example.com',
+        'password123',
+      );
       expect(result).toEqual(mockUser);
     });
 
@@ -89,7 +94,7 @@ describe('AuthService', () => {
       mockUsersService.getUserByEmail.mockRejectedValue(new Error());
 
       await expect(
-        service.getAuthenticatedUser('wrong@email.com', 'password123')
+        service.getAuthenticatedUser('wrong@email.com', 'password123'),
       ).rejects.toThrow();
     });
   });
@@ -102,8 +107,8 @@ describe('AuthService', () => {
       expect(jwtService.sign).toHaveBeenCalledWith({
         sub: mockUser.id,
         name: mockUser.name,
-        email: mockUser.email
+        email: mockUser.email,
       });
     });
   });
-}); 
+});

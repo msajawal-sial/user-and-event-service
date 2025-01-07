@@ -12,7 +12,7 @@ describe('EventsService', () => {
   const mockUser = {
     id: 1,
     email: 'test@example.com',
-    name: 'Test User'
+    name: 'Test User',
   } as Partial<User> as User;
 
   const mockEvent = {
@@ -24,7 +24,7 @@ describe('EventsService', () => {
     endDate: new Date(),
     creator: mockUser,
     date: new Date(),
-    joinRequests: []
+    joinRequests: [],
   } as Event;
 
   const mockRepository = {
@@ -59,16 +59,16 @@ describe('EventsService', () => {
       category: 'TEST',
       startDate: new Date(),
       endDate: new Date(),
-      date: new Date()
+      date: new Date(),
     };
 
     it('should create a new event', async () => {
       const result = await service.createEvent(createEventDto, mockUser);
-      
+
       expect(result).toEqual(mockEvent);
       expect(repository.create).toHaveBeenCalledWith({
         ...createEventDto,
-        creator: mockUser
+        creator: mockUser,
       });
       expect(repository.save).toHaveBeenCalled();
     });
@@ -85,12 +85,12 @@ describe('EventsService', () => {
         new Date(),
         new Date(),
         0,
-        10
+        10,
       );
-      
+
       expect(result).toEqual({
         items: mockEvents,
-        count: mockCount
+        count: mockCount,
       });
       expect(repository.findAndCount).toHaveBeenCalled();
     });
@@ -102,18 +102,18 @@ describe('EventsService', () => {
       const endDate = new Date();
 
       await service.getAllEvents(category, startDate, endDate, 0, 10);
-      
+
       expect(repository.findAndCount).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
             category,
-            date: expect.any(Object)
+            date: expect.any(Object),
           }),
           order: { id: 'ASC' },
           skip: 0,
-          take: 10
-        })
+          take: 10,
+        }),
       );
     });
   });
-}); 
+});

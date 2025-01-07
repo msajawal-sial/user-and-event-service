@@ -8,7 +8,6 @@ import { EventsModule } from './modules/events/events.module';
 import { EventJoinRequestsModule } from './modules/event-join-requests/event-join-requests.module';
 import { EmailModule } from './core/messaging/email.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,16 +23,16 @@ import { EmailModule } from './core/messaging/email.module';
         RABBITMQ_HOST: Joi.string().required(),
         RABBITMQ_QUEUE_NAME: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
-        JWT_EXPIRATION_TIME_SECONDS: Joi.number().required()
-      })
+        JWT_EXPIRATION_TIME_SECONDS: Joi.number().required(),
+      }),
     }),
     AuthModule,
     DatabaseModule,
     EmailModule,
     UsersModule,
     EventsModule,
-    EventJoinRequestsModule
-    ],
+    EventJoinRequestsModule,
+  ],
   controllers: [],
   providers: [],
 })

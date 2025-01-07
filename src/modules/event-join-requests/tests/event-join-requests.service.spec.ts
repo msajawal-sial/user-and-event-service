@@ -16,7 +16,7 @@ describe('EventJoinRequestsService', () => {
   const mockUser = {
     id: 1,
     email: 'test@example.com',
-    name: 'Test User'
+    name: 'Test User',
   } as Partial<User> as User;
 
   const mockEvent = {
@@ -24,8 +24,8 @@ describe('EventJoinRequestsService', () => {
     title: 'Test Event',
     creator: {
       email: 'creator@example.com',
-      name: 'Creator'
-    }
+      name: 'Creator',
+    },
   } as Partial<Event> as Event;
 
   const mockJoinRequest = {
@@ -34,7 +34,7 @@ describe('EventJoinRequestsService', () => {
     userId: 1,
     status: 'PENDING',
     user: mockUser,
-    event: mockEvent
+    event: mockEvent,
   } as EventJoinRequest;
 
   const mockRepository = {
@@ -64,7 +64,9 @@ describe('EventJoinRequestsService', () => {
     }).compile();
 
     service = module.get<EventJoinRequestsService>(EventJoinRequestsService);
-    repository = module.get<Repository<EventJoinRequest>>(getRepositoryToken(EventJoinRequest));
+    repository = module.get<Repository<EventJoinRequest>>(
+      getRepositoryToken(EventJoinRequest),
+    );
     emailService = module.get<EmailService>(EmailService);
   });
 
@@ -74,18 +76,18 @@ describe('EventJoinRequestsService', () => {
 
   describe('createEventJoinRequest', () => {
     const createDto = {
-      eventId: 1
+      eventId: 1,
     };
 
     it('should create a join request and send email', async () => {
       mockRepository.findOne.mockResolvedValue(mockJoinRequest);
 
       const result = await service.createEventJoinRequest(createDto, 1);
-      
+
       expect(result).toEqual(mockJoinRequest);
       expect(repository.create).toHaveBeenCalledWith({
         ...createDto,
-        userId: 1
+        userId: 1,
       });
       expect(emailService.sendEmail).toHaveBeenCalled();
     });
@@ -94,14 +96,14 @@ describe('EventJoinRequestsService', () => {
       mockRepository.save.mockRejectedValue({ code: '23505' }); // UniqueViolation
 
       await expect(
-        service.createEventJoinRequest(createDto, 1)
+        service.createEventJoinRequest(createDto, 1),
       ).rejects.toThrow(HttpException);
     });
   });
 
   describe('updateEventJoinRequest', () => {
     const updateDto = {
-      status: 'ACCEPTED' as const
+      status: 'ACCEPTED' as const,
     };
 
     it('should update status and send email', async () => {
@@ -109,7 +111,7 @@ describe('EventJoinRequestsService', () => {
       mockRepository.findOne.mockResolvedValue(mockJoinRequest);
 
       const result = await service.updateEventJoinRequest(1, updateDto);
-      
+
       expect(result).toBe(true);
       expect(repository.update).toHaveBeenCalledWith(1, updateDto);
       expect(emailService.sendEmail).toHaveBeenCalled();
@@ -119,8 +121,8 @@ describe('EventJoinRequestsService', () => {
       mockRepository.update.mockResolvedValue({ affected: 0 });
 
       const result = await service.updateEventJoinRequest(1, updateDto);
-      
+
       expect(result).toBe(false);
     });
   });
-}); 
+});

@@ -14,7 +14,7 @@ describe('UsersService', () => {
     id: 1,
     email: 'test@example.com',
     name: 'Test User',
-    password: 'hashedPassword123'
+    password: 'hashedPassword123',
   } as Partial<User> as User;
 
   const mockRepository = {
@@ -47,12 +47,12 @@ describe('UsersService', () => {
     const createUserDto = {
       email: 'test@example.com',
       password: 'password123',
-      name: 'Test User'
+      name: 'Test User',
     };
 
     it('should create a new user', async () => {
       const result = await service.create(createUserDto);
-      
+
       expect(result).toEqual(mockUser);
       expect(repository.create).toHaveBeenCalledWith(createUserDto);
       expect(repository.save).toHaveBeenCalled();
@@ -64,7 +64,7 @@ describe('UsersService', () => {
       mockRepository.findOneBy.mockResolvedValue(mockUser);
 
       const result = await service.getUser(1);
-      
+
       expect(result).toEqual(mockUser);
       expect(repository.findOneBy).toHaveBeenCalledWith({ id: 1 });
     });
@@ -81,29 +81,33 @@ describe('UsersService', () => {
       mockRepository.findOneBy.mockResolvedValue(mockUser);
 
       const result = await service.getUserByEmail('test@example.com');
-      
+
       expect(result).toEqual(mockUser);
-      expect(repository.findOneBy).toHaveBeenCalledWith({ email: 'test@example.com' });
+      expect(repository.findOneBy).toHaveBeenCalledWith({
+        email: 'test@example.com',
+      });
     });
 
     it('should throw if user not found', async () => {
       mockRepository.findOneBy.mockResolvedValue(null);
 
-      await expect(service.getUserByEmail('test@example.com')).rejects.toThrow(HttpException);
+      await expect(service.getUserByEmail('test@example.com')).rejects.toThrow(
+        HttpException,
+      );
     });
   });
 
   describe('updateUser', () => {
     const updateUserDto = {
       name: 'Updated Name',
-      password: 'newpassword123'
+      password: 'newpassword123',
     };
 
     it('should update user successfully', async () => {
       mockRepository.update.mockResolvedValue({ affected: 1 });
 
       const result = await service.updateUser(1, updateUserDto);
-      
+
       expect(result).toBe(true);
       expect(repository.update).toHaveBeenCalled();
     });
@@ -112,7 +116,7 @@ describe('UsersService', () => {
       mockRepository.update.mockResolvedValue({ affected: 0 });
 
       const result = await service.updateUser(1, updateUserDto);
-      
+
       expect(result).toBe(false);
     });
 
@@ -121,8 +125,8 @@ describe('UsersService', () => {
       const spy = jest.spyOn(bcrypt, 'hash');
 
       await service.updateUser(1, updateUserDto);
-      
+
       expect(spy).toHaveBeenCalled();
     });
   });
-}); 
+});

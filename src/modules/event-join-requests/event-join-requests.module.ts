@@ -7,12 +7,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { EmailModule } from 'src/core/messaging/email.module';
 
- 
 @Module({
   imports: [
     ConfigModule,
     EmailModule,
-    TypeOrmModule.forFeature([EventJoinRequest])
+    TypeOrmModule.forFeature([EventJoinRequest]),
   ],
   controllers: [EventJoinRequestsController],
   providers: [EventJoinRequestsService],

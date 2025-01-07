@@ -11,7 +11,7 @@ describe('UsersController', () => {
     id: 1,
     email: 'test@example.com',
     name: 'Test User',
-    password: 'hashedPassword123'
+    password: 'hashedPassword123',
   } as Partial<User> as User;
 
   const mockUsersService = {
@@ -41,7 +41,7 @@ describe('UsersController', () => {
   describe('getUser', () => {
     it('should return a user', async () => {
       const result = await controller.getUser('1');
-      
+
       expect(result).toEqual(mockUser);
       expect(service.getUser).toHaveBeenCalledWith(1);
     });
@@ -50,14 +50,14 @@ describe('UsersController', () => {
   describe('updateUser', () => {
     const updateUserDto = {
       name: 'Updated Name',
-      password: 'newpassword123'
+      password: 'newpassword123',
     };
 
     it('should update user successfully', async () => {
       const result = await controller.updateUser(1, updateUserDto);
-      
+
       expect(result).toBe(true);
       expect(service.updateUser).toHaveBeenCalledWith(1, updateUserDto);
     });
   });
-}); 
+});

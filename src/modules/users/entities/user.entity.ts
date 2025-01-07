@@ -3,18 +3,18 @@ import { Exclude } from 'class-transformer';
 import { Event } from '../../events/entities/event.entity';
 import { EventJoinRequest } from '../../event-join-requests/entities/event-join-request.entity';
 import { ApiHideProperty } from '@nestjs/swagger';
- 
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   public id?: number;
- 
+
   @Column({ unique: true })
   public email: string;
- 
+
   @Column()
   public name: string;
- 
+
   @ApiHideProperty()
   @Exclude()
   @Column()
@@ -22,9 +22,12 @@ export class User {
 
   @ApiHideProperty()
   @OneToMany(() => Event, (event: Event) => event.creator)
-  public events: Event
+  public events: Event;
 
   @ApiHideProperty()
-  @OneToMany(() => EventJoinRequest, (eventJoinRequest: EventJoinRequest) => eventJoinRequest.user)
-  public eventJoinRequests: EventJoinRequest[]
+  @OneToMany(
+    () => EventJoinRequest,
+    (eventJoinRequest: EventJoinRequest) => eventJoinRequest.user,
+  )
+  public eventJoinRequests: EventJoinRequest[];
 }

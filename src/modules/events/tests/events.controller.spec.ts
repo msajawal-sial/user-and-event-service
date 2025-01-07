@@ -12,7 +12,7 @@ describe('EventsController', () => {
   const mockUser = {
     id: 1,
     email: 'test@example.com',
-    name: 'Test User'
+    name: 'Test User',
   } as Partial<User> as User;
 
   const mockEvent = {
@@ -24,14 +24,14 @@ describe('EventsController', () => {
     endDate: new Date(),
     creator: mockUser,
     date: new Date(),
-    joinRequests: []
+    joinRequests: [],
   } as Event;
 
   const mockEventsService = {
     createEvent: jest.fn().mockResolvedValue(mockEvent),
     getAllEvents: jest.fn().mockResolvedValue({
       items: [mockEvent],
-      count: 1
+      count: 1,
     }),
   };
 
@@ -61,16 +61,19 @@ describe('EventsController', () => {
       category: 'TEST',
       startDate: new Date(),
       endDate: new Date(),
-      date: new Date()
+      date: new Date(),
     };
 
     it('should create a new event', async () => {
       const request = { user: mockUser } as RequestWithUser;
-      
+
       const result = await controller.createEvent(createEventDto, request);
-      
+
       expect(result).toEqual(mockEvent);
-      expect(service.createEvent).toHaveBeenCalledWith(createEventDto, mockUser);
+      expect(service.createEvent).toHaveBeenCalledWith(
+        createEventDto,
+        mockUser,
+      );
     });
   });
 
@@ -79,26 +82,29 @@ describe('EventsController', () => {
       const searchParams = {
         category: 'TEST',
         startDate: new Date(),
-        endDate: new Date()
+        endDate: new Date(),
       };
       const paginationParams = {
         offset: 0,
-        limit: 10
+        limit: 10,
       };
 
-      const result = await controller.getAllEvents(searchParams, paginationParams);
-      
+      const result = await controller.getAllEvents(
+        searchParams,
+        paginationParams,
+      );
+
       expect(result).toEqual({
         items: [mockEvent],
-        count: 1
+        count: 1,
       });
       expect(service.getAllEvents).toHaveBeenCalledWith(
         searchParams.category,
         searchParams.startDate,
         searchParams.endDate,
         paginationParams.offset,
-        paginationParams.limit
+        paginationParams.limit,
       );
     });
   });
-}); 
+});
