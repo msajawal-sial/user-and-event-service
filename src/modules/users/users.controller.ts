@@ -35,7 +35,7 @@ export class UsersController {
     type: Boolean
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
-  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+  updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateUser(id, updateUserDto);
   }
 } 

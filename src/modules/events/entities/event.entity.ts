@@ -1,17 +1,15 @@
 import {
     Column,
     Entity,
-    JoinTable,
-    ManyToMany,
     ManyToOne,
     PrimaryGeneratedColumn,
     Index,
     OneToMany,
-    RelationId,
-    CreateDateColumn,
   } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { EventJoinRequest } from '../../event-join-requests/entities/event-join-request.entity';
+import { Exclude } from 'class-transformer';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity()
  export class Event {
@@ -31,9 +29,13 @@ import { EventJoinRequest } from '../../event-join-requests/entities/event-join-
     @Column({ type: 'timestamp' })
     public date: Date
 
+    @ApiHideProperty()
+    @Exclude()
     @ManyToOne(() => User, (creator: User) => creator.events)
     public creator: User
 
+    @ApiHideProperty()
+    @Exclude()
     @OneToMany(() => EventJoinRequest, (eventJoinRequest: EventJoinRequest) => eventJoinRequest.event)
     public joinRequests: EventJoinRequest[]
 }

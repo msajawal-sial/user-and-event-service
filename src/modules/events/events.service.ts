@@ -12,15 +12,13 @@ export class EventsService {
         private readonly eventsRepository: Repository<Event>,
     ) {}
 
-
-    async createEvent(event: CreateEventDto, user: User) {
-        const newEvent = await this.eventsRepository.create({
+    async createEvent(event: CreateEventDto, user: User): Promise<Event> {
+        const newEvent = this.eventsRepository.create({
             ...event,
             creator: user
         });
 
-        await this.eventsRepository.save(newEvent);
-        return newEvent;
+        return await this.eventsRepository.save(newEvent);
     }
 
     async getAllEvents(
@@ -29,7 +27,7 @@ export class EventsService {
         endDate?: Date,
         offset?: number,
         limit?: number
-    ) {
+    ): Promise<{ items: Event[], count: number }> {
 
         const whereConditions: FindOptionsWhere<Event> = {
             ...(category && { category }),
