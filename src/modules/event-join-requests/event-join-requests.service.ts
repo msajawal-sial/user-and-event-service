@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { EventJoinRequest } from "./entities/event-join-request.entity";
@@ -6,6 +6,7 @@ import { CreateEventJoinRequestDto } from "./dto/create-event-join-request.dto";
 import { notificationTemplates } from "../../shared/constants/notification-templates";
 import { UpdateEventJoinRequestDto } from "./dto/update-event-join-request.dto";
 import { EmailService } from "../../core/messaging/email.service";
+import { PostgresErrorCode } from "src/core/database/postgres-error-codes.enum";
 
 @Injectable()
 export class EventJoinRequestsService {
@@ -15,18 +16,26 @@ export class EventJoinRequestsService {
         private readonly emailService: EmailService,
     ) {}
 
-    async createEventJoinRequest(eventJoinRequest: CreateEventJoinRequestDto) {
+    async createEventJoinRequest(eventJoinRequest: CreateEventJoinRequestDto, userId: number): Promise<EventJoinRequest> {
         const newEventJoinRequest = this.eventJoinRequestsRepository.create({
             ...eventJoinRequest,
+            userId: userId
         });
-        await this.eventJoinRequestsRepository.save(newEventJoinRequest);
+        try {
+            await this.eventJoinRequestsRepository.save(newEventJoinRequest);
+        } catch (error) {
+            if (error?.code === PostgresErrorCode.UniqueViolation) {
+                throw new HttpException('User with that email already exists', HttpStatus.BAD_REQUEST);
+              }
+              throw new HttpException('Something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         
-        const cratedEventJoinRequest = await this.getEventJoinRequest(newEventJoinRequest.id)
+        const createdEventJoinRequest = await this.getEventJoinRequest(newEventJoinRequest.id)
         
         this.emailService.sendEmail(
             notificationTemplates.createEventJoinRequest,
-            cratedEventJoinRequest.event.creator.email,
-            { user: cratedEventJoinRequest.user.name, event: cratedEventJoinRequest.event.title },
+            createdEventJoinRequest.event.creator.email,
+            { user: createdEventJoinRequest.user.name, event: createdEventJoinRequest.event.title },
         )
     
         return newEventJoinRequest;
@@ -36,9 +45,7 @@ export class EventJoinRequestsService {
         const result = await this.eventJoinRequestsRepository.update(id, updateEventJoinRequest);
     
         if (result.affected && result.affected > 0) {
-            // Fetch the updated entity
-            const updatedEventJoinRequest = await this.getEventJoinRequest(id);
-            
+            const updatedEventJoinRequest = await this.getEventJoinRequest(id);            
             // Send an email notification if the status has changed from "PENDING"
             if (updatedEventJoinRequest.status !== "PENDING") {
                 this.emailService.sendEmail(
