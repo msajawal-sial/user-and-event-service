@@ -5,5 +5,5 @@ How to setup the project?
 3. Open terminal in the root directory of the email-notification-service repository
 4. Build docker image for email-notification-service by using `docker build -t email-notification-service:latest .`
 5. Open terminal in the root directory of the current repository
-6. Add environemnt variable 'SEND_GRID_API_KEY' to user-and-event-service container in docker-compose.yml file
+6. Add environemnt variable 'SEND_GRID_API_KEY' email-notification-service container in docker-compose.yml file
 7. Run `docker compose up'
