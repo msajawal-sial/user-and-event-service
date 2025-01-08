@@ -4,7 +4,7 @@ import { Event } from '../../events/entities/event.entity';
 import { EventJoinRequest } from '../../event-join-requests/entities/event-join-request.entity';
 import { ApiHideProperty } from '@nestjs/swagger';
 
-@Entity()
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   public id?: number;
