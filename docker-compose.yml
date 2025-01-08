@@ -48,7 +48,6 @@ services:
       - mispay
     environment:
       SENDER_EMAIL: 'msajawalsial@gmail.com'
-      SEND_GRID_API_KEY: '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'
       RABBITMQ_USER: 'admin'
       RABBITMQ_PASSWORD: 'admin'
       RABBITMQ_HOST: rabbitmq:5672
