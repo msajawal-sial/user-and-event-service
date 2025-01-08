@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './core/database/database.module';
@@ -7,6 +7,7 @@ import { UsersModule } from './modules/users/users.module';
 import { EventsModule } from './modules/events/events.module';
 import { EventJoinRequestsModule } from './modules/event-join-requests/event-join-requests.module';
 import { EmailModule } from './core/messaging/email.module';
+import { LogsMiddleware } from './core/middleware/logs.middleware';
 
 @Module({
   imports: [
@@ -36,4 +37,8 @@ import { EmailModule } from './core/messaging/email.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LogsMiddleware).forRoutes('*');
+  }
+}
